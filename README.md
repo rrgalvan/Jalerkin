@@ -1,2 +1,4 @@
 # Jalerkin
 Galerkin method in JuliaLang
+
+Simple library, designed just for learning
