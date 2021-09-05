@@ -1,8 +1,6 @@
 module Jalerkin
 
 include("Mesh.jl")
-export Mesh1D
-
-greet() = print("Hello World!")
+export GenericMesh1D, Mesh1D
 
 end # module
