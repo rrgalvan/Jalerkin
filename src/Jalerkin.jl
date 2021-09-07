@@ -1,6 +1,7 @@
 module Jalerkin
 
+include("Macros.jl")
 include("Mesh.jl")
-export GenericMesh1D, Mesh1D
+export Mesh, GenericMesh1D, Mesh1D
 
 end # module
