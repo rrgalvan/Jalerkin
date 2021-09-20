@@ -26,12 +26,12 @@ function TrapezoidQuad()
     Quadrature{2,Float64}(nodes, weights)
 end
 
-function quad(values :: AbstractArray, q::Quadrature{N,T}) where {N,T}
+function quad(values::AbstractArray, q::Quadrature{N,T}) where {N,T}
     """
     Compute integral of a function using a concrete quadrature formula,
     where 'values' are the values of the function on q.nodes
     """
-    dot(weights(q), values)
+    weights(q) ⋅ values
 end
 
 @inline function quad(f, q::Quadrature{N,T}) where {N,T}
