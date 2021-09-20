@@ -12,7 +12,7 @@ Abastract type AbastractMesh
 
 AstractMesh is a interface defined by overloading the following methods:
 
-- [`get_vertex_coordinates(trian::Triangulation)`](@ref)
+- [`get_vertex_coord(trian::Triangulation)`](@ref)
 - [`get_cell_vertices`](trian::Triangulation)`](@ref)
 """
 
@@ -21,7 +21,7 @@ abstract type AbstractMesh <: JalerkinType end
 """
 get_vertex_coordinates(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Point}}}
 """
-function get_vertex_coordinates(mesh::AbstractMesh)
+function get_vertex_coord(mesh::AbstractMesh)
     @abstractmethod
 end
 
@@ -47,22 +47,22 @@ Cell = SVector{Nv, Int64} where Nv
 
 """Mesh will contain sets of Cells and Vertices (Points)"""
 struct Mesh{CellType, VertexType}  <: AbstractMesh
-    cells :: Vector{CellType}
-    vertices :: Vector{VertexType}
+    cell_vertices :: Vector{CellType}
+    vertex_coord :: Vector{VertexType}
 end
 
 """
 This function is part of the interface AbstractMesh
 """
-function get_vertex_coordinates(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
-    mesh.vertices
+@inline function get_vertex_coord(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
+    mesh.vertex_coord
 end
 
 """
 This function is part of the interface AbstractMesh
 """
-function get_cell_vertices(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
-    mesh.cells
+@inline function get_cell_vertices(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
+    mesh.cell_vertices
 end
 
 
