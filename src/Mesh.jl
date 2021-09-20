@@ -1,5 +1,3 @@
-using StaticArrays
-
 #--- JalerkinType
 
 """Abstract type JalerkinType: root of the type hierarchy"""
