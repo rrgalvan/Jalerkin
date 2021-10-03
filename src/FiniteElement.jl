@@ -26,6 +26,7 @@ Finite element (of a given type) on a mesh
 """
 struct FiniteElement{Mesh <: AbstractMesh, FE_Type <: Abstract_FE_Type, order}
     mesh :: Mesh
+    quad_rule :: AbstractQuadrature
 end
 
 """
@@ -33,19 +34,17 @@ Constructor of a FiniteElement from a mesh, a FE family and an polinomial order"
 """
 function FiniteElement(mesh::Mesh, ::Type{FE_T}, order) where {
     Mesh <: AbstractMesh, FE_T <: Abstract_FE_Type}
-    FiniteElement{Mesh, FE_T, order}(mesh)
+    FiniteElement{Mesh, FE_T, order}(mesh, EmptyQuadrature())
 end
-
 
 """
 Return order of a Lagrenge Finite Element
 """
 get_order(fe::FiniteElement{Mesh, FE_T, order}) where {Mesh, FE_T, order} = order
 
-#
-# function LagrangeFiniteElement(mesh::Mesh, order) where {Mesh<:AbstractMesh}
-#     FiniteElement{Mesh, Lagrange{order}}(mesh)
-# end
-
-# function build_stiffnes_matrix(finite_element)
-#     # Para cada elemento calcular k_{ij} =
+"""
+Assign a quadrature rule to be used to assembling linear system
+"""
+function attach_quad_rule(fe::FiniteElement, qr::AbstractQuadrature)
+    fe.quad_rule = qr
+end
