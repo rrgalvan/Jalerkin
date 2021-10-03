@@ -4,47 +4,53 @@ abstract type AbstractAffineMap <: JalerkinType end
 # Data type for 1-d affine mappings, $F:[0,1] -> [x0,x1]$,
 # defined as: $F(t)=a\cdot t + b$, $a, b \in \mathbb R$.
 # """
-struct AffineMap1D{T <: Real} <: AbstractAffineMap
+struct AffineMap1D <: AbstractAffineMap
     "Multiplicative coefficient"
-    a :: T
+    a :: fp_precision()
     "Translation coefficient"
-    b :: T
-    "Determinant of the jacobian (= a in the 1D case)"
-    det_jacobian :: T
+    b :: fp_precision()
+    "Determinant of the jacobian (=a, in 1D)"
+    det_jacobian :: fp_precision()
 end
 
 #--- Finite Element
 
-abstract type Abstract_FE_Type <: JalerkinType end
+abstract type FE_Family <: JalerkinType end
+abstract type Abstract_FE <: JalerkinType end
+
 """
 Lagrange family of finite elements
 """
-struct Lagrange <: Abstract_FE_Type end;
+struct Lagrange <: FE_Family end;
 
 """
 Finite element (of a given type) on a mesh
 """
-struct FiniteElement{Mesh <: AbstractMesh, FE_Type <: Abstract_FE_Type, order}
+struct FiniteElement{Mesh <: AbstractMesh, FE_Fam <: FE_Family, order}
     mesh :: Mesh
     quad_rule :: AbstractQuadrature
 end
 
 """
-Constructor of a FiniteElement from a mesh, a FE family and an polinomial order"
+Constructor of a FiniteElement from a mesh, a FE family and a polinomial order"
+
+A Gauss Quadrature rule is chosen such that the mass matrix is computed exactly
 """
-function FiniteElement(mesh::Mesh, ::Type{FE_T}, order) where {
-    Mesh <: AbstractMesh, FE_T <: Abstract_FE_Type}
-    FiniteElement{Mesh, FE_T, order}(mesh, EmptyQuadrature())
+function FiniteElement(mesh::Mesh, ::Type{FE_Fam}, order; quad_rule=GaussianQuadrature(2*order)) where {Mesh <: AbstractMesh, FE_Fam <: FE_Family}
+    FiniteElement{Mesh, FE_Fam, order}(mesh, quad_rule)
 end
 
 """
-Return order of a Lagrenge Finite Element
+Return the mesh of a Finite Element
 """
-get_order(fe::FiniteElement{Mesh, FE_T, order}) where {Mesh, FE_T, order} = order
+@inline get_mesh(fe::FiniteElement)  = fe.mesh
 
 """
-Assign a quadrature rule to be used to assembling linear system
+Return the quadrature rule of a Finite Element
 """
-function attach_quad_rule(fe::FiniteElement, qr::AbstractQuadrature)
-    fe.quad_rule = qr
-end
+@inline get_quad_rule(fe::FiniteElement)  = fe.quad_rule
+
+"""
+Return the polynomial order of a Finite Element
+"""
+@inline get_order(fe::FiniteElement{Mesh, FE_T, order}) where {Mesh, FE_T, order} = order
