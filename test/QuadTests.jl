@@ -10,7 +10,6 @@ qr = Quadrature{3}(nodes, weights)
 @test quad(qr, x->x^3) ≈ 0.25
 
 # Test Gaussian quad. rule on [-1,1]
-@test quad(GaussianQuadrature(3), x->x^5) ≈ 0
 @test quad(GaussianQuadrature(4), x->x^6) ≈ 2/7
 
 end #module
