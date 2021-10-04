@@ -1,9 +1,9 @@
 using FastGaussQuadrature
 
-abstract type AbstractQuadrature end;
-
+abstract type AbstractQuadrature <: JalerkinType end;
 
 #--- Quadrature
+
 struct Quadrature{N} <: AbstractQuadrature
     """
     Quadrature rule with N nodes and weights of type T
@@ -12,11 +12,11 @@ struct Quadrature{N} <: AbstractQuadrature
     weights :: SVector{N, fp_precision()}
 end
 
-@inline function get_nodes(q::AbstractQuadrature)
+@inline function get_nodes(q::Quadrature)
     q.nodes
 end
 
-@inline function get_weights(q::AbstractQuadrature)
+@inline function get_weights(q::Quadrature)
     q.weights
 end
 
@@ -37,23 +37,17 @@ end
 
 #--- Constructors for concrete quadrature rules
 
-
+"""Gaussian quadrature rule on [-1,1] with n points"""
 function GaussianQuadrature(n)
     nodes, weights = gausslegendre(n)
     Quadrature{n}(nodes, weights)
 end
 
-function TrapezoidQuadrature()
-    """
-    Trapezoid quadrature rule on interval [0, 1]
-    """
-    nodes = [0, 1]
-    weights = [0.5, 0.5]
-    Quadrature{2}(nodes, weights)
-end
-
-
-#--- EmptyQuadrature
-struct EmptyQuadrature <: AbstractQuadrature end
-@inline get_nodes(q::EmptyQuadrature) = []
-@inline get_weights(q::EmptyQuadrature) = []
+# """
+# Trapezoid quadrature rule on interval [0, 1]
+# """
+# function TrapezoidQuadrature_01()
+#     nodes = [0, 1]
+#     weights = [0.5, 0.5]
+#     Quadrature{2}(nodes, weights)
+# end

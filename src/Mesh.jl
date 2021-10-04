@@ -6,23 +6,23 @@ Abastract type AbastractMesh
 
 AstractMesh is a interface defined by overloading the following methods:
 
-- [`get_vertex_coord(trian::Triangulation)`](@ref)
-- [`get_cell_vertices`](trian::Triangulation)`](@ref)
+- [`get_coord_vector(trian::Triangulation)`](@ref)
+- [`get_cell_vector`](trian::Triangulation)`](@ref)
 """
 
 abstract type AbstractMesh <: JalerkinType end
 
 """
-get_vertex_coordinates(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Point}}}
+get_coord_vector(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Point}}}
 """
-function get_vertex_coord(mesh::AbstractMesh)
+function get_coord_vector(mesh::AbstractMesh)
     @abstractmethod
 end
 
 """
-get_cell_vertices(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Cell}}}
+get_cell_vector(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Cell}}}
 """
-function get_cell_vertices(mesh::AbstractMesh)
+function get_cell_vector(mesh::AbstractMesh)
     @abstractmethod
 end
 
@@ -33,33 +33,34 @@ Static Vector of Dim real numbers
 """
 Point = SVector{Dim, fp_precision()} where {Dim}
 
-
 """Type Cell (given number of vértices)
 
 Static vector of indices (identifiers of the cell points)
 """
-Cell = SVector{Nv, Int64} where {Nv}
+Cell = SVector{NumVertex, Int64} where {NumVertex}
 
 """Mesh will contain sets of Cells and Vertices (Points)"""
 struct Mesh{CellType, VertexType}  <: AbstractMesh
-    cell_vertices :: Vector{CellType}
-    vertex_coord :: Vector{VertexType}
+    "Vector of cells (each cell contains a list of vertex indices)"
+    cell_vector :: Vector{CellType}
+
+    "Vector of coordinates of each vertex"
+    coord_vector :: Vector{VertexType}
 end
 
 """
 This function is part of the interface AbstractMesh
 """
-@inline function get_vertex_coord(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
-    mesh.vertex_coord
+@inline function get_coord_vector(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
+    mesh.coord_vector
 end
 
 """
 This function is part of the interface AbstractMesh
 """
-@inline function get_cell_vertices(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
-    mesh.cell_vertices
+@inline function get_cell_vector(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
+    mesh.cell_vector
 end
-
 
 "Constructor for a 1D mesh in the interval [x1, x2]"
 function Mesh1D(x1, x2, ncells)
