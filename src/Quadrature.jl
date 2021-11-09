@@ -43,11 +43,11 @@ function GaussianQuadrature(n)
     Quadrature{n}(nodes, weights)
 end
 
-# """
-# Trapezoid quadrature rule on interval [0, 1]
-# """
-# function TrapezoidQuadrature_01()
-#     nodes = [0, 1]
-#     weights = [0.5, 0.5]
-#     Quadrature{2}(nodes, weights)
-# end
+"""
+Trapezoid quadrature rule on interval [-1, 1]
+"""
+function TrapezoidQuadrature()
+    nodes = [-1, 1]
+    weights = [1, 1]
+    Quadrature{2}(nodes, weights)
+end
