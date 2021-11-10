@@ -37,8 +37,9 @@ Constructor of a FiniteElement from a mesh, a FE family and a polinomial order"
 A Gauss Quadrature rule is chosen such that the mass matrix is computed exactly
 """
 function FiniteElement(mesh::Mesh, ::Type{FE_Fam}, order;
-    quad_rule=GaussianQuadrature(2*order))
-    where {Mesh <: AbstractMesh, FE_Fam <: FE_Family}
+    quad_rule=GaussianQuadrature(2*order)) where {
+        Mesh <: AbstractMesh,
+        FE_Fam <: FE_Family }
 
     FiniteElement{Mesh, FE_Fam, order}(mesh, quad_rule)
 end
@@ -56,5 +57,5 @@ Return the quadrature rule of a Finite Element
 """
 Return the polynomial order of a Finite Element
 """
-@inline get_order(fe::FiniteElement{Mesh, FE_T, order})
-    where {Mesh, FE_T, order} = order
+@inline get_order(fe::FiniteElement{Mesh, FE_T, order}) where {
+    Mesh, FE_T, order} = order
