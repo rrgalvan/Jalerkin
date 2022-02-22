@@ -26,6 +26,16 @@ function get_cell_vector(mesh::AbstractMesh)
     @abstractmethod
 end
 
+"""
+Returns a vector with coordinates of the vertices of cell i
+"""
+function get_coord_of_cell(mesh, i)
+    cells = get_cell_vector(mesh)
+    coord = get_coord_vector(mesh)
+    cell_vertex = cells[i]
+    [coord[cell_vertex[1]], coord[cell_vertex[2]]]
+end
+
 #--- Mesh
 """Type Point (given dimension, type of real numbers).
 
