@@ -61,6 +61,20 @@ Return the polynomial order of a Finite Element
     Mesh, FE_T, order} = order
 
 """
+Return the nuber of local degrees of freedom of a Finite Element
+"""
+
+@inline function num_local_dofs(fe::FiniteElement)
+    @abstractmethod
+end
+
+"""
+Return the nuber of local degrees of freedom of a P1-Lagrenge
+Finite Element on a 0d mesh
+"""
+@inline num_local_dofs(fe::FiniteElement{Mesh, Lagrange, 1}) where {Mesh} = 2
+
+"""
 Return P1-Lagrange shape functions evaluated at the quadrature points.
 """
 function get_phi(fe::FiniteElement{Mesh, Lagrange, 1} where Mesh)
