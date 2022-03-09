@@ -59,3 +59,42 @@ Return the polynomial order of a Finite Element
 """
 @inline get_order(fe::FiniteElement{Mesh, FE_T, order}) where {
     Mesh, FE_T, order} = order
+
+"""
+Return P1-Lagrange shape functions evaluated at the quadrature points.
+"""
+function get_phi(fe::FiniteElement{Mesh, Lagrange, 1} where Mesh)
+    # Lagrange basis polynomials on {x0,x1}={-1,1}
+    phi1 = x -> -0.5*(x-1)
+    phi2 = x -> +0.5*(x+1)
+    # Evaluation on quadrature nodes
+    qnodes = get_nodes(get_quad_rule(fe))
+    [map(phi1, qnodes), map(phi2, qnodes)]
+end
+
+"""
+return P2-Lagrange shape functions evaluated at the quadrature points.
+"""
+function get_phi(fe::FiniteElement{Mesh, Lagrange, 2}) where Mesh
+    # Lagrange basis polynomials on {x0,x1,x2}={-1,0,1}
+    phi1 = x -> -0.5*(x-0)*(x-1)
+    phi2 = x -> -(x+1)*(x-1)
+    phi3 = x -> +0.5*(x+1)*(x-0)
+    # Evaluation on quadrature nodes
+    qnodes = get_nodes(get_quad_rule(fe))
+    [map(phi1, qnodes), map(phi2, qnodes), map(phi3, qnodes)]
+end
+
+"""
+Element Jacobian of one element * quadrature weight at each integration point.
+"""
+function get_JxW(fe::FiniteElement{Mesh, Lagrange, order}, element_index) where {Mesh, order}
+    mesh = get_mesh(fe)
+    coord = get_coords(mesh)
+    cell2vertex = get_cell_to_vertex(mesh)
+    x1 = coord[cell2vertex[element_index]][1][1]
+    x2 = coord[cell2vertex[element_index]][2][1]
+    J_affine_map = 0.5*(x2-x1)
+    q_weights = get_weights(get_quad_rule(fe))
+    return J_affine_map*q_weights
+end

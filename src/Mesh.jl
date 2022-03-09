@@ -6,23 +6,23 @@ Abastract type AbastractMesh
 
 AstractMesh is a interface defined by overloading the following methods:
 
-- [`get_coord_vector(trian::Triangulation)`](@ref)
-- [`get_cell_vector`](trian::Triangulation)`](@ref)
+- [`get_coords(trian::Triangulation)`](@ref)
+- [`get_cell_to_vertex`](trian::Triangulation)`](@ref)
 """
 
 abstract type AbstractMesh <: JalerkinType end
 
 """
-get_coord_vector(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Point}}}
+get_coords(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Point}}}
 """
-function get_coord_vector(mesh::AbstractMesh)
+function get_coords(mesh::AbstractMesh)
     @abstractmethod
 end
 
 """
-get_cell_vector(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Cell}}}
+get_cell_to_vertex(Mesh::AbstractMesh) -> AbstractArray{Vector{<:Cell}}}
 """
-function get_cell_vector(mesh::AbstractMesh)
+function get_cell_to_vertex(mesh::AbstractMesh)
     @abstractmethod
 end
 
@@ -30,8 +30,8 @@ end
 Returns a vector with coordinates of the vertices of cell i
 """
 function get_coord_of_cell(mesh, i)
-    cells = get_cell_vector(mesh)
-    coord = get_coord_vector(mesh)
+    cells = get_cell_to_vertex(mesh)
+    coord = get_coords(mesh)
     cell_vertex = cells[i]
     [coord[cell_vertex[1]], coord[cell_vertex[2]]]
 end
@@ -61,14 +61,14 @@ end
 """
 This function is part of the interface AbstractMesh
 """
-@inline function get_coord_vector(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
+@inline function get_coords(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
     mesh.coord_vector
 end
 
 """
 This function is part of the interface AbstractMesh
 """
-@inline function get_cell_vector(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
+@inline function get_cell_to_vertex(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
     mesh.cell_vector
 end
 

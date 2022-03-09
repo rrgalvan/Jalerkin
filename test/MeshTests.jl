@@ -12,8 +12,8 @@ c = Cell{2}(1,2)
 # 1D mesh
 m = Mesh1D(0, 1, 10)
 
-@test get_cell_vector(m) == [[i, i+1] for i=1:10]
-@test get_coord_vector(m) ≈ [[0.1*i] for i=0:10]
+@test get_cell_to_vertex(m) == [[i, i+1] for i=1:10]
+@test get_coords(m) ≈ [[0.1*i] for i=0:10]
 
 # Quadrangular 2D mesh
 C = Cell{4}
