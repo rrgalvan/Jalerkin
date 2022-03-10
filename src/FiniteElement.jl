@@ -164,3 +164,29 @@ function add_matrix(M, M_local, dof_indices)
         end
     end
 end
+
+"""
+Compute integral of a function f on an element, saving the results
+in the local matrix M_local
+
+For each pair of local dofs (i,j) of the element, the
+value f(i,j) is the vector of values of f on the quadrature points.
+
+For instance, the mass matrix can be integrated using the lambda function
+    f = (i, j) -> phi[i].*phi[j],
+where phi[i] is the vector of values on quadrature points of the ith local
+basis (in the reference element)
+
+TODO: Define a Type "Integrator", so that "integrate( )" works like:
+    local_integrator = Integrator(fe, element)
+    integrate(f, local_integrator)
+"""
+function integrate(M_local, f, id_element, fe)
+    num_local_dofs = size(M_local)[1]
+    JxW = get_JxW(fe, id_element)
+    for i=1:num_local_dofs
+        for j=1:num_local_dofs
+            M_local[i,j] = sum(JxW.*f(i,j))
+        end
+    end
+end

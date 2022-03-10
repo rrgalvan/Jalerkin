@@ -18,5 +18,6 @@ export FiniteElement, Lagrange, get_order, num_local_dofs, get_mesh
 export get_quad_rule, get_phi, get_JxW
 export num_elements, num_local_dofs, num_global_dofs
 export get_dof_indices, add_matrix
+export integrate
 
 end # module
