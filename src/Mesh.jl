@@ -66,10 +66,24 @@ This function is part of the interface AbstractMesh
 end
 
 """
+Number of vertices in a mesh
+"""
+@inline function num_vertices(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
+    length(get_coords(mesh))
+end
+
+"""
 This function is part of the interface AbstractMesh
 """
 @inline function get_cell_to_vertex(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
     mesh.cell_vector
+end
+
+"""
+Number of cells in a mesh
+"""
+@inline function num_cells(mesh::Mesh{CellType, VertexType}) where {CellType, VertexType}
+    length(get_cell_to_vertex(mesh))
 end
 
 "Constructor for a 1D mesh in the interval [x1, x2]"

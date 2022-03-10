@@ -50,6 +50,11 @@ Return the mesh of a Finite Element
 @inline get_mesh(fe::FiniteElement) = fe.mesh
 
 """
+Return the number of elements of a Finite Element space
+"""
+@inline num_elements(fe::FiniteElement) = num_cells(fe.mesh)
+
+"""
 Return the quadrature rule of a Finite Element
 """
 @inline get_quad_rule(fe::FiniteElement) = fe.quad_rule
@@ -61,16 +66,31 @@ Return the polynomial order of a Finite Element
     Mesh, FE_T, order} = order
 
 """
-Return the nuber of local degrees of freedom of a Finite Element
+Return the total nuber of local degrees of freedom in a Finite Element space
 """
+@inline function num_global_dofs(fe::FiniteElement)
+    @abstractmethod
+end
 
+"""
+Return the total nuber of local degrees of freedom in
+a P1-Lagrenge Finite Element on a 0d mesh
+"""
+@inline function num_global_dofs(fe::FiniteElement{Mesh, Lagrange, 1}) where {Mesh}
+   num_vertices(get_mesh(fe))
+end
+
+"""
+Return the nuber of local degrees of freedom of each element in a
+Finite Element space
+"""
 @inline function num_local_dofs(fe::FiniteElement)
     @abstractmethod
 end
 
 """
-Return the nuber of local degrees of freedom of a P1-Lagrenge
-Finite Element on a 0d mesh
+Return the nuber of local degrees of freedom of each element in
+a P1-Lagrenge Finite Element on a 0d mesh
 """
 @inline num_local_dofs(fe::FiniteElement{Mesh, Lagrange, 1}) where {Mesh} = 2
 
@@ -111,4 +131,21 @@ function get_JxW(fe::FiniteElement{Mesh, Lagrange, order}, element_index) where 
     J_affine_map = 0.5*(x2-x1)
     q_weights = get_weights(get_quad_rule(fe))
     return J_affine_map*q_weights
+end
+
+"""
+Return the vector of global indexes corresponding to the degrees of
+one element in an abstract Finite Element space
+"""
+@inline function get_dof_indexes(fe::FiniteElement, element_index)
+    @abstractmethod
+end
+
+"""
+Return the vector of global indexes corresponding to the degrees of
+one element in an P1-Lagrange 1D FE space
+"""
+@inline function get_dof_indexes(fe::FiniteElement{Mesh, Lagrange, 1}, element_index ) where {Mesh}
+    cell2vertex = get_cell_to_vertex(get_mesh(fe))
+    return cell2vertex[element_index]
 end
