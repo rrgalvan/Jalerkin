@@ -134,18 +134,33 @@ function get_JxW(fe::FiniteElement{Mesh, Lagrange, order}, element_index) where 
 end
 
 """
-Return the vector of global indexes corresponding to the degrees of
+Return the vector of global indices corresponding to the degrees of
 one element in an abstract Finite Element space
 """
-@inline function get_dof_indexes(fe::FiniteElement, element_index)
+@inline function get_dof_indices(fe::FiniteElement, element_index)
     @abstractmethod
 end
 
 """
-Return the vector of global indexes corresponding to the degrees of
+Return the vector of global indices corresponding to the degrees of
 one element in an P1-Lagrange 1D FE space
 """
-@inline function get_dof_indexes(fe::FiniteElement{Mesh, Lagrange, 1}, element_index ) where {Mesh}
+@inline function get_dof_indices(fe::FiniteElement{Mesh, Lagrange, 1}, element_index ) where {Mesh}
     cell2vertex = get_cell_to_vertex(get_mesh(fe))
     return cell2vertex[element_index]
+end
+
+"""
+Add to a global matrix, the contents of a local matrix. They are add in rows
+and columns defined by the vector dof_indices
+"""
+function add_matrix(M, M_local, dof_indices)
+    n = length(dof_indices)
+    for i=1:n
+        I = dof_indices[i]
+        for j=1:n
+            J = dof_indices[j]
+            M[I,J] += M_local[i,j]
+        end
+    end
 end
