@@ -3,7 +3,6 @@ module MeshTests
 using Test
 using Jalerkin
 
-
 ncells = 2
 mesh = Mesh1D(0, 1, ncells)
 fe = FiniteElement(mesh, Lagrange, 1)
