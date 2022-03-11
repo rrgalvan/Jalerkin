@@ -107,6 +107,20 @@ function get_phi(fe::FiniteElement{Mesh, Lagrange, 1} where Mesh)
 end
 
 """
+Return P1-Lagrange *derivative* of shape functions evaluated at
+the quadrature points.
+"""
+function get_dphi(fe::FiniteElement{Mesh, Lagrange, 1} where Mesh)
+    # Lagrange basis polynomials on {x0,x1}={-1,1}
+    dphi1 = -0.5
+    dphi2 = +0.5
+    # Evaluation on quadrature nodes
+    n = length(get_nodes(get_quad_rule(fe)))
+    [fill(dphi1, n), fill(dphi2, n)]
+end
+
+
+"""
 return P2-Lagrange shape functions evaluated at the quadrature points.
 """
 function get_phi(fe::FiniteElement{Mesh, Lagrange, 2}) where Mesh
