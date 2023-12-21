@@ -15,3 +15,5 @@ Our goal is simply to explore Galerkin-type methods, without obligations or cond
 | 4     | 1D spectral element code and tests (secuencial version). | pending |
 | 5     | 2D finite element code and tests (secuencial version). | pending |
 | 6     | 2D spectral element code and tests (secuencial version). | pending |
+
+P
